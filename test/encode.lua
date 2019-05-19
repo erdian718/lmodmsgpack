@@ -16,12 +16,23 @@ end
 function test.integer()
 	assert(msgpack.encode(0) == string.char(0))
 	assert(msgpack.encode(127) == string.char(127))
+	assert(msgpack.encode(128) == string.char(204, 128))
+	assert(msgpack.encode(255) == string.char(204, 255))
+	assert(msgpack.encode(256) == string.char(205, 1, 0))
+	assert(msgpack.encode(65535) == string.char(205, 255, 255))
+	assert(msgpack.encode(65536) == string.char(206, 0, 1, 0, 0))
+	assert(msgpack.encode(4294967295) == string.char(206, 255, 255, 255, 255))
+	assert(msgpack.encode(4294967296) == string.char(207, 0, 0, 0, 1, 0, 0, 0, 0))
+
 	assert(msgpack.encode(-1) == string.char(255))
 	assert(msgpack.encode(-32) == string.char(224))
-
 	assert(msgpack.encode(-33) == string.char(208, 223))
 	assert(msgpack.encode(-128) == string.char(208, 128))
-	-- TODO uint
+	assert(msgpack.encode(-129) == string.char(209, 255, 127))
+	assert(msgpack.encode(-32768) == string.char(209, 128, 0))
+	assert(msgpack.encode(-32769) == string.char(210, 255, 255, 127, 255))
+	assert(msgpack.encode(-2147483648) == string.char(210, 128, 0, 0, 0))
+	assert(msgpack.encode(-2147483649) == string.char(211, 255, 255, 255, 255, 127, 255, 255, 255))
 end
 
 function test.string()

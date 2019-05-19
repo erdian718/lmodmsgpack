@@ -142,26 +142,50 @@ func encodeFloat(v float64) []byte {
 
 func encodeInteger(v int64) []byte {
 	var xs []byte
-	switch {
-	case v >= -32 && v < 128:
-		xs = make([]byte, 1)
-		xs[0] = byte(v)
-	case int64(int8(v)) == v:
-		xs = make([]byte, 2)
-		xs[0] = 0xd0
-		xs[1] = byte(v)
-	case int64(int16(v)) == v:
-		xs = make([]byte, 3)
-		xs[0] = 0xd1
-		endian.PutUint16(xs[1:], uint16(v))
-	case int64(int32(v)) == v:
-		xs = make([]byte, 5)
-		xs[0] = 0xd2
-		endian.PutUint32(xs[1:], uint32(v))
-	default:
-		xs = make([]byte, 9)
-		xs[0] = 0xd3
-		endian.PutUint64(xs[1:], uint64(v))
+	if v >= 0 {
+		switch {
+		case v < 128:
+			xs = make([]byte, 1)
+			xs[0] = byte(v)
+		case int64(uint8(v)) == v:
+			xs = make([]byte, 2)
+			xs[0] = 0xcc
+			xs[1] = byte(v)
+		case int64(uint16(v)) == v:
+			xs = make([]byte, 3)
+			xs[0] = 0xcd
+			endian.PutUint16(xs[1:], uint16(v))
+		case int64(uint32(v)) == v:
+			xs = make([]byte, 5)
+			xs[0] = 0xce
+			endian.PutUint32(xs[1:], uint32(v))
+		default:
+			xs = make([]byte, 9)
+			xs[0] = 0xcf
+			endian.PutUint64(xs[1:], uint64(v))
+		}
+	} else {
+		switch {
+		case v >= -32:
+			xs = make([]byte, 1)
+			xs[0] = byte(v)
+		case int64(int8(v)) == v:
+			xs = make([]byte, 2)
+			xs[0] = 0xd0
+			xs[1] = byte(v)
+		case int64(int16(v)) == v:
+			xs = make([]byte, 3)
+			xs[0] = 0xd1
+			endian.PutUint16(xs[1:], uint16(v))
+		case int64(int32(v)) == v:
+			xs = make([]byte, 5)
+			xs[0] = 0xd2
+			endian.PutUint32(xs[1:], uint32(v))
+		default:
+			xs = make([]byte, 9)
+			xs[0] = 0xd3
+			endian.PutUint64(xs[1:], uint64(v))
+		}
 	}
 	return xs
 }
