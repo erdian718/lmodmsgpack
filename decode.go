@@ -164,7 +164,17 @@ func decodeInteger(l *lua.State, r io.Reader, x byte) (m int64, err error) {
 		xs, e := readn(r, 8)
 		m, err = int64(len(xs)), e
 		if err == nil {
-			l.Push(int64(endian.Uint64(xs)))
+			if x == 0xcf {
+				v0 := endian.Uint64(xs)
+				v1 := int64(v0)
+				if v1 >= 0 {
+					l.Push(v1)
+				} else {
+					l.Push(float64(v0))
+				}
+			} else {
+				l.Push(int64(endian.Uint64(xs)))
+			}
 		}
 	}
 	return
