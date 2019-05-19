@@ -26,20 +26,46 @@ end
 
 function test.string()
 	assert(msgpack.encode('') == string.char(160))
-	-- TODO
-end
 
-function test.table()
-	assert(msgpack.encode({}) == string.char(128))
-	assert(msgpack.encode({
-		a = 1;
-		b = 2;
-		c = 3;
-	}) == string.char(131, 161, 97, 1, 161, 98, 2, 161, 99, 3))
-end
+	local s = string.rep('*', 31)
+	local xs = msgpack.encode(s)
+	assert(string.byte(xs) == 191)
+	assert(string.sub(xs, 2) == s)
 
-function test.userdata()
-	-- TODO
+	local s = string.rep('*', 32)
+	local xs = msgpack.encode(s)
+	assert(string.byte(xs, 1) == 217)
+	assert(string.byte(xs, 2) == 32)
+	assert(string.sub(xs, 3) == s)
+
+	local s = string.rep('*', 255)
+	local xs = msgpack.encode(s)
+	assert(string.byte(xs, 1) == 217)
+	assert(string.byte(xs, 2) == 255)
+	assert(string.sub(xs, 3) == s)
+
+	local s = string.rep('*', 256)
+	local xs = msgpack.encode(s)
+	assert(string.byte(xs, 1) == 218)
+	assert(string.byte(xs, 2) == 1)
+	assert(string.byte(xs, 3) == 0)
+	assert(string.sub(xs, 4) == s)
+
+	local s = string.rep('*', 65535)
+	local xs = msgpack.encode(s)
+	assert(string.byte(xs, 1) == 218)
+	assert(string.byte(xs, 2) == 255)
+	assert(string.byte(xs, 3) == 255)
+	assert(string.sub(xs, 4) == s)
+
+	local s = string.rep('*', 65536)
+	local xs = msgpack.encode(s)
+	assert(string.byte(xs, 1) == 219)
+	assert(string.byte(xs, 2) == 0)
+	assert(string.byte(xs, 3) == 1)
+	assert(string.byte(xs, 4) == 0)
+	assert(string.byte(xs, 5) == 0)
+	assert(string.sub(xs, 6) == s)
 end
 
 return test
