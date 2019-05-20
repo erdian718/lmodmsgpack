@@ -83,25 +83,25 @@ func lEncode(l *lua.State) int {
 func lDecode(l *lua.State) int {
 	var e error
 	var r io.Reader
+	var i int64
 	if l.TypeOf(1) == lua.TypeUserData {
 		r = toReader(l, 1)
 	} else {
 		s := l.ToString(1)
-		i := int(l.OptInteger(2, 1))
+		i = l.OptInteger(2, 1)
 		if i < 0 {
-			i += len(s) + 1
+			i += int64(len(s)) + 1
 		}
-		i -= 1
-		r = strings.NewReader(s[i:])
+		r = strings.NewReader(s[i-1:])
 	}
 	k, e := DecodeReader(l, r)
 	if e == nil {
 		l.Push(nil)
-		l.Push(k)
+		l.Push(k + i)
 	} else {
 		l.Push(nil)
 		l.Push(e.Error())
-		l.Push(k)
+		l.Push(k + i)
 	}
 	return 3
 }
