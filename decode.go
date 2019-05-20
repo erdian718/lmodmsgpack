@@ -184,9 +184,9 @@ func decodeArray(l *lua.State, r io.Reader, x byte) (m int64, err error) {
 	n, k := 0, 0
 	switch x {
 	case 0xdc:
-		n, k, err = declen(r, 16)
+		n, k, err = declen(r, 2)
 	case 0xdd:
-		n, k, err = declen(r, 32)
+		n, k, err = declen(r, 4)
 	default:
 		n = int(x - 0x90)
 	}
@@ -213,9 +213,9 @@ func decodeMap(l *lua.State, r io.Reader, x byte) (m int64, err error) {
 	n, k := 0, 0
 	switch x {
 	case 0xde:
-		n, k, err = declen(r, 16)
+		n, k, err = declen(r, 2)
 	case 0xdf:
-		n, k, err = declen(r, 32)
+		n, k, err = declen(r, 4)
 	default:
 		n = int(x - 0x80)
 	}
@@ -249,11 +249,11 @@ func decodeExt(l *lua.State, r io.Reader, x byte) (m int64, err error) {
 	} else {
 		switch x {
 		case 0xc7:
-			n, k, err = declen(r, 8)
+			n, k, err = declen(r, 1)
 		case 0xc8:
-			n, k, err = declen(r, 16)
+			n, k, err = declen(r, 2)
 		case 0xc9:
-			n, k, err = declen(r, 32)
+			n, k, err = declen(r, 4)
 		}
 	}
 	m = int64(k)
