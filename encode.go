@@ -37,8 +37,8 @@ func EncodeBytes(l *lua.State, idx int) []byte {
 	case lua.TypeString:
 		return encodeString(l.ToString(idx))
 	case lua.TypeNumber:
-		if l.STypeOf(idx) == lua.STypeInteger {
-			return encodeInteger(l.ToInteger(idx))
+		if v, e := l.TryInteger(idx); e == nil {
+			return encodeInteger(v)
 		} else {
 			return encodeFloat(l.ToFloat(idx))
 		}
@@ -74,8 +74,8 @@ func EncodeWriter(l *lua.State, idx int, w io.Writer) (int64, error) {
 		k, e := w.Write(encodeString(l.ToString(idx)))
 		return int64(k), e
 	case lua.TypeNumber:
-		if l.STypeOf(idx) == lua.STypeInteger {
-			k, e := w.Write(encodeInteger(l.ToInteger(idx)))
+		if v, e := l.TryInteger(idx); e == nil {
+			k, e := w.Write(encodeInteger(v))
 			return int64(k), e
 		} else {
 			k, e := w.Write(encodeFloat(l.ToFloat(idx)))
