@@ -9,7 +9,6 @@ function test.base()
 end
 
 function test.float()
-	-- TODO float32
 	assert(msgpack.decode(string.char(203, 84, 178, 73, 173, 37, 148, 195, 125)) == 1e100)
 end
 

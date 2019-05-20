@@ -132,7 +132,6 @@ func encodeString(v string) []byte {
 }
 
 func encodeFloat(v float64) []byte {
-	// TODO float32
 	var xs []byte
 	xs = make([]byte, 9)
 	xs[0] = 0xcb
