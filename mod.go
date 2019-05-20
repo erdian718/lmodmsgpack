@@ -26,8 +26,9 @@ package lmodmsgpack
 import (
 	"bytes"
 	"io"
-	"ofunc/lua"
 	"strings"
+
+	"ofunc/lua"
 )
 
 // Open opens the module.
