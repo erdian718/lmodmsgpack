@@ -251,7 +251,7 @@ func encodeArray(l *lua.State, idx int, w io.Writer) (m int64, err error) {
 	for i := int64(1); i <= n; i++ {
 		l.Push(i)
 		l.GetTable(idx)
-		k, e := EncodeWriter(l, -2, w)
+		k, e := EncodeWriter(l, -1, w)
 		m, err = m+k, e
 		l.Pop(1)
 		if err != nil {

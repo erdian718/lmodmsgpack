@@ -62,6 +62,24 @@ function test.table()
 	assert(equal(x, msgpack.decode(msgpack.encode(x))))
 end
 
+function test.len()
+	local xs = msgpack.decode(msgpack.encode(testlen))
+	assert(#xs == 10000)
+	for i = 1, 10000 do
+		assert(xs[i] == 2*i)
+	end
+end
+
+function test.pairs()
+	local xs = msgpack.decode(msgpack.encode(testpairs))
+	local s = 0
+	for k, v in pairs(xs) do
+		assert(v == 2 * k)
+		s = s + v
+	end
+	assert(s == 99990000)
+end
+
 function test.multi()
 	local x1, x2, x3, x4, x5, x6, x7 = 'ABC', 123, {'E', 'F', 'G'}, 12.34, nil, true, false
 	local s = msgpack.encode(x1, x2, x3, x4, x5, x6, x7)
