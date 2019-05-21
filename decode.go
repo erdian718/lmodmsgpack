@@ -195,8 +195,8 @@ func decodeArray(l *lua.State, r io.Reader, x byte) (m int64, err error) {
 		return
 	}
 	l.NewTable(n, 0)
-	for i := 0; i < n; i++ {
-		l.Push(i + 1)
+	for i := 1; i <= n; i++ {
+		l.Push(i)
 		k, e := DecodeReader(l, r)
 		m, err = m+k, e
 		if err == nil {
