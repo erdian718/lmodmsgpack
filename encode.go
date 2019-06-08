@@ -53,14 +53,14 @@ func EncodeBytes(l *lua.State, idx int) []byte {
 		encodeTable(l, idx, buf)
 		return buf.Bytes()
 	}
-	if l.GetMetaField(idx, "__len") != lua.TypeNil {
-		buf := new(bytes.Buffer)
-		encodeArray(l, idx, buf)
-		return buf.Bytes()
-	}
 	if l.GetMetaField(idx, "__pairs") != lua.TypeNil {
 		buf := new(bytes.Buffer)
 		encodePairs(l, idx, buf)
+		return buf.Bytes()
+	}
+	if l.GetMetaField(idx, "__len") != lua.TypeNil {
+		buf := new(bytes.Buffer)
+		encodeArray(l, idx, buf)
 		return buf.Bytes()
 	}
 	return []byte{0xc0}
